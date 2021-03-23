@@ -13,7 +13,19 @@ or enter this URL in your web browser:
 
 <file:///F:/workspace/EREZ/galilean/galilean.html>
 
-Just change the path to where the package has been unzipped.
+***NOTE:*** Just change the path to where the package has been unzipped.
+
+When the page opens up, a button on appears on top to load the configuraiton file.
+Click and select the configuration file you modified.
+The button disappears.
+
+Whenever the configuration is changed (see below), you can click anywhere on the banner for this 
+button to re-appear and than to upload a new configuration.
+
+Clicking on the banner again will make this button to disappear.
+
+In general, the banner can run in full-page mode by clicking
+the F11 button (or <Fn> with the F11 in some computers).
 
 #Configuration
 The banner is configured via the ***galilean.xlsx*** file.
