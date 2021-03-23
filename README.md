@@ -16,14 +16,12 @@ or enter this URL in your web browser:
 ***NOTE:*** Just change the path to where the package has been unzipped.
 
 When the page opens up, a button appears on screen top
-to load the configuration file 
-(e.g. ***galilean.xlsx*** - see explanation in 
+to load the configuration file (e.g. ***galilean.xlsx*** - see explanation in 
 [Configuration](#configuration) below).
-Click and select the configuration file you modified.
-The button disappears.
+Click and select the configuration file you modified. The button disappears.
 
-Whenever the configuration is changed (see below), you can click anywhere on the banner for this 
-button to re-appear and then to upload a new configuration.
+Whenever the configuration is changed (see below), you can click anywhere on the 
+banner for this button to re-appear and then to upload a new configuration.
 
 Clicking anywhere on the banner again will make this button disappear.
 
@@ -42,14 +40,12 @@ The file has the following pages:
    3. *field* - field of medical expertise
    4. *picture* - name of picture file. If missing, defaultDoctor.jpg is used. 
 The picture files are located in the installation folder.
-2. **Monday** and additional pages for each work 
-day of the week - Each page has a table 
-with these columns:
+2. **Monday** and additional pages for each work day of the week - Each page has a table 
+    with these columns:
    1. *hour* - in which listed are the operational hours of the clinic. Presently these are
         from 8 (AM) to 20 (PM).
    2. *1*,*2*, ...*5* (more can be added) - each representing a room number.    
-To mark room usage, enter the doctor short 
-id in the cell corresponding to
+To mark room usage, enter the doctor short id in the cell corresponding to
 that room (column) and the hour (row).
    3. *pictures* - in this page list the pictures for the cycling picture effect on the banner. This page has two columns: 
       * *picture* - which holds pictures file names, located in the installation folder. 
