@@ -22,18 +22,13 @@ to load the configuration file
 Click and select the configuration file you modified.
 The button disappears.
 
-Whenever the configuration is changed (see below), 
-you can click anywhere on the banner for this 
-button to re-appear and than to upload a 
-new configuration.
+Whenever the configuration is changed (see below), you can click anywhere on the banner for this 
+button to re-appear and then to upload a new configuration.
 
-Clicking anywhere on the banner again 
-will make this button disappear.
+Clicking anywhere on the banner again will make this button disappear.
 
-In general, the banner can run in full-page 
-mode by clicking
-the ***F11*** button 
-(or combine the ***Fn*** button with ***F11*** 
+In general, the banner can run in full-page mode by clicking
+the ***F11*** button (or combine the ***Fn*** button with ***F11*** 
 in some computers).
 
 ## Configuration
@@ -45,23 +40,18 @@ The file has the following pages:
    1. *id* - short name id
    2. *name* - full name
    3. *field* - field of medical expertise
-   4. *picture* - name of picture file. If missing, 
-        defaultDoctor.jpg is used. 
-        The picture files are located in the 
-        installation folder.
+   4. *picture* - name of picture file. If missing, defaultDoctor.jpg is used. 
+The picture files are located in the installation folder.
 2. **Monday** and additional pages for each work 
-    day of the week - Each page has a table 
-    with these columns:
-   1. *hour* in which listed are the operational hours of the clinic. Presently these are
+day of the week - Each page has a table 
+with these columns:
+   1. *hour* - in which listed are the operational hours of the clinic. Presently these are
         from 8 (AM) to 20 (PM).
-   2. *1*,*2*, ...*5*. More can be added, each representing a room number.    
-        To mark room usage, enter the doctor short 
-        id in the cell corresponding to
-        that room (column) and the hour (row).
+   2. *1*,*2*, ...*5* (more can be added) - each representing a room number.    
+To mark room usage, enter the doctor short 
+id in the cell corresponding to
+that room (column) and the hour (row).
    3. *pictures* - in this page list the pictures for the cycling picture effect on the banner. This page has two columns: 
-      * *picture* which holds pictures file names, 
-         located in the installation folder. 
-      * *cycle* which has
-         only one entry to hold the number of 
-         milliseconds for the pictures cycling time.
-        
+      * *picture* - which holds pictures file names, located in the installation folder. 
+      * *cycle* - which has only one entry to hold the number of 
+milliseconds for the pictures cycling time.
