@@ -1,5 +1,4 @@
 #Galilean 
-
 A program to display continuous panel for the Galilean 
 clinic, showing doctors' activity status.
 
@@ -59,10 +58,10 @@ The file has the following pages:
     
         To mark room usage, enter the doctor short 
         id in the cell corresponding to
-        that room (column)and the hour (row).
+        that room (column) and the hour (row).
 
-    3. *pictures** - in this page list the pictures for the cycling picture effect on the banner. This page has two columns: 
-       * *picture* which holds picture file names, 
+    3. *pictures* - in this page list the pictures for the cycling picture effect on the banner. This page has two columns: 
+       * *picture* which holds pictures file names, 
          located in the installation folder. 
        * *cycle* which has
          only one entry to hold the number of 
