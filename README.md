@@ -3,11 +3,11 @@
 A program to display continuous panel for the Galilean clinic, showing
 doctors activity status.
 
-#Installation
+##Installation
 Unzip the package obtained from the github repository at:
 <https://github.com/shani/galilean/archive/master.zip>
 
-#Execution
+##Execution
 To execute, double click on the galilean.html file on your pc file browser, 
 or enter this URL in your web browser:
 
@@ -27,7 +27,7 @@ Clicking on the banner again will make this button to disappear.
 In general, the banner can run in full-page mode by clicking
 the F11 button (or <Fn> with the F11 in some computers).
 
-#Configuration
+##Configuration
 The banner is configured via the ***galilean.xlsx*** file.
 The file has the following pages:
 1. **names** - which has a table listing physician names in the clinic. Having these columns:
