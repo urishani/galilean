@@ -1,15 +1,15 @@
 let reader = new FileReader();
-let xlsflag = true;
+let xlsxflag = true;
 let data;
 reader.onload = function (e) {
     data = e.target.result;
     /*Converts the excel data in to object*/
     let workbook;
     if (xlsxflag) {
-        workbook = XLSX.read(data, { type: 'binary' });
+        workbook = XLSX.read(data, {type: 'binary'});
     }
     else {
-        workbook = XLS.read(data, { type: 'binary' });
+        workbook = XLS.read(data, {type: 'binary'});
     }
     /*Gets all the sheetnames of excel in to a letiable*/
     let sheet_name_list = workbook.SheetNames;
@@ -26,40 +26,46 @@ reader.onload = function (e) {
         if (excelJson.length > 0) {
             data[y] = excelJson;
         }
-            // let display = document.getElementById(y);
-            // let display = $('#Monday')[0];
-            // display.innerText=JSON.stringify(exceljson);
-            // $(display).show();
+        // let display = document.getElementById(y);
+        // let display = $('#Monday')[0];
+        // display.innerText=JSON.stringify(exceljson);
+        // $(display).show();
         // }
     });
     if (data.pictures) {
-        let pictures = data.pictures.map(e=>
+        let pictures = data.pictures.map(e =>
             e.picture);
         let div = $('#cycler');
         let inner = '';
-        pictures.forEach(p=>inner += '<img src="' + p + '" alt="' + p + '"/>\n');
+        let first = true;
+        pictures.forEach(p => {
+            inner += '<img src="' + p +
+                '" class="' + (first ? 'first' : 'rest') +
+                '" alt="' + p + '"/>\n';
+            first = false;
+        });
         div.html(inner);
         $('#cycler img:first').addClass('active');
         setInterval('cycleImages()', data.pictures[0].cycle || 7000);
     }
-    $('#table').show();
     let form = $('#form');
     form.hide();
-    $(document).click(()=> {
+    $(document).click(() => {
         if (form.is(":hidden")) form.show();
         else form.hide();
     });
+    refresh();
+};
+function refresh() {
+    alert('refresh');
     let days = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    let display = $('#display');
-    display = display[0];
     let todate = new Date();
-    let today = todate.getDay();
+    let today = todate.getDay(); // 1
     day = days[today];
-    let hour = todate.getHours();
+    let hour = todate.getHours(); // 11
     $('#date').html(todate.toDateString() + ', ' +
         ('0'+hour).slice(-2) + ':00 - ' +
         ('0'+(hour+1)).slice(-2) + ':00');
-    let msg = '';
     let schedule = data[day];
     if (schedule) {
         schedule = schedule.filter(function (e) {
@@ -68,30 +74,47 @@ reader.onload = function (e) {
         if (schedule) schedule = schedule[0];
     }
     let busy = false;
-    if (!schedule) {
-        msg += '<tr><td colspan="3">No Activity</td></tr>';
-    } else {
-        let names = [];
-        for (r = 1; r < 10; r++) {
-            if (schedule[r] && schedule[r].trim()) {
-                names.push({
-                    name: schedule[r],
-                    room: r,
-                });
-            }
+    let names = [];
+    for (r = 1; r < 10; r++) {
+        if (schedule && schedule[r] && schedule[r].trim()) {
+            names.push({
+               name: schedule[r],
+               room: r,
+            });
         }
-        names.forEach(function (e) {
-            busy = true;
-            msg += '<tr><td>Room ' + e.room + '</td><td>' +
-                details(e.name, data.names) + '</td></tr>\n';
-        })
-        if (!busy) msg += '<span>All Free';
     }
-    msg += '</span>';
-    if (!display.innerHTML) display.innerHTML = '';
-    display.innerHTML += msg;
-    // alert(day);
+    for (let i = 0; i<3; i++) {
+        let j = i+1;
+        let e = {name:'', field:'', picture:'', room:''};
+        let n = names[i];
+        if (!!n && !!n.name) {
+            let r = data.names.filter((e)=>e.id===n.name);
+            if (!!r && !!r[0]) {
+                e = {room: n.room, ...r[0]};
+            }
+            busy = busy || true;
+        }
+        let nameF = $('#name' + j);
+        nameF.text(e.name);
+        let fieldF = $('#field' + j);
+        fieldF.text(e.field);
+        if (!e.picture) e.picture = 'genericDoctor.jpg';
+        let picF = $('#picture' + j);
+        picF.attr('src', e.picture);
+        let roomF = $('#room' + j);
+        roomF.text((!!e.room)?('Room ' + e.room): '');
+    }
+    if (busy) {
+        $('#display').show();
+        $('#noActivity').hide();
+    } else {
+        $('#display').hide();
+        $('#noActivity').show();
+    }
+    let seconds = new Date().getSeconds();
+    setTimeout(refresh, (60-seconds) * 1000);
 }
+
 
 function cycleImages() {
     let $active = $('#cycler .active');
@@ -102,20 +125,7 @@ function cycleImages() {
         $next.css('z-index',3).addClass('active');//make the next image the top one
     });
 }
-function details(name, namesData) {
-    drow = namesData.filter(function(d) {
-        return d.id === name;
-    });
-    if (drow) {
-        drow = drow[0];
-        let result = drow.name + '</td><td>' + drow.field + '</td><td>';
-        if (drow.picture) result += '<img class="small-img" src="' + drow.picture +
-            '" alt="' + name + '"/>';
-        return result;
-    } else
-        return name;
-}
-function ExportToTable() {
+function readExcelFile() {
     let regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
     /*Checks whether the file is a valid excel file*/
 
