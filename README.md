@@ -38,7 +38,7 @@ The file has the following pages:
    1. *id* - short name id
    2. *name* - full name
    3. *field* - field of medical expertise
-   4. *picture* - name of picture file. If missing, defaultDoctor.jpg is used. 
+   4. *picture* - name of picture file. If missing, ***genericDoctor.jpg*** is used.
 The picture files are located in the installation folder.
 2. **Monday** and additional pages for each work day of the week - Each page has a table 
     with these columns:
