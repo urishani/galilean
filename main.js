@@ -57,7 +57,7 @@ reader.onload = function (e) {
     refresh();
 };
 function refresh() {
-    alert('refresh');
+    // alert('refresh');
     let days = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let todate = new Date();
     let today = todate.getDay(); // 1
