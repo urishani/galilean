@@ -2,4 +2,5 @@ Employee*
 Excel2Table.*
 .*
 ~$*
-
+package-lock.json
+node_modules*
