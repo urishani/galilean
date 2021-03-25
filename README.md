@@ -67,7 +67,7 @@ The server requires an application known as ***node.js***.
 This will create two tools: ***node***, which is the program which 
  executes our web server, and ***npm*** which is a tool to manage
  node.
-2. Prepate the server: Run in the installation folder ***npm install***, which will prepare
+2. Prepare the server: Run in the installation folder ***npm install***, which will prepare
 all the needed software.
 
 ## Execution
@@ -86,7 +86,7 @@ a different 4 digit number (e.g., 3000).
 ## Killing the server
 To kill the server you can type ***<ctrl>C*** on the server console.
 
-## Configuraiton
+## Configuration
 
 As in the non-server mode, the xlsx file ***galilean.xlsx***
 in the installation folder is used. However, when the file
@@ -96,4 +96,4 @@ the new data at the next (per-minute) update period automatically.
 In any of these clients, clicking anywhere on the panel will 
 pop-up on the screen top a button reading ***Refresh from Server***.
 Clicking on this button will update immediately that client.
-Clicking again on the screen will make this button disapear. 
+Clicking again on the screen will make this button disappear. 
