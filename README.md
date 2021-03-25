@@ -51,3 +51,49 @@ that room (column) and the hour (row).
       * *picture* - which holds pictures file names, located in the installation folder. 
       * *cycle* - which has only one entry to hold the number of 
 milliseconds for the pictures cycling time.
+
+# Server
+
+The service can also work as a web server. The advantage is that the computer holding
+all the data runs a web server as explained here, 
+and it can (as well as any other computer, tablet or smart phone on the network)
+open the banner page from its built-in web-browser of choice.
+
+## Installation
+
+The server requires an application known as ***node.js***.
+1. install ***node.js*** on your PC (or MAC) computer from this link:
+<https://nodejs.org/en/download/>
+This will create two tools: ***node***, which is the program which 
+ executes our web server, and ***npm*** which is a tool to manage
+ node.
+2. Prepate the server: Run in the installation folder ***npm install***, which will prepare
+all the needed software.
+
+## Execution
+Every time you want to run the server itself run the command
+***npm start***
+The server will start working, printing on the console that 
+it started, and what is the URL to reach its content.
+That may very well be: ***<http://localhost:8080/galilean.html>***.
+To activate this from another device, replace ***hostname*** with the 
+IP address of the server computer, or its network name.
+
+Note: The port 8080 used here can be changed by editing the 
+file ***server.js***, locating the string 8080, and choosing 
+a different 4 digit number (e.g., 3000).
+
+## Killing the server
+To kill the server you can type ***<ctrl>C*** on the server console.
+
+## Configuraiton
+
+As in the non-server mode, the xlsx file ***galilean.xlsx***
+in the installation folder is used. However, when the file
+changes, all the clients displaying the banner page will update
+the new data at the next (per-minute) update period automatically.
+
+In any of these clients, clicking anywhere on the panel will 
+pop-up on the screen top a button reading ***Refresh from Server***.
+Clicking on this button will update immediately that client.
+Clicking again on the screen will make this button disapear. 
