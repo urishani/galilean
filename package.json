@@ -1,0 +1,25 @@
+{
+  "name": "galilean",
+  "version": "0.0.2",
+  "description": "Server for the Galilean banner web application",
+  "engines": {
+    "node": "9.x"
+  },
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "debug": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/urishani/galilean"
+  },
+  "keywords": [
+    "node",
+    "galilean",
+    "express"
+  ]
+}

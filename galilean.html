@@ -91,6 +91,7 @@
     <form id="form">
     <input type="file" id="excelfile" accept=".xls, .xlsx" onchange="readExcelFile()" onclick="this.value=null;"/>
     </form>
+    <button id="refresh" onclick="readData()">Refresh from Server</button>
     <div class="flex-container-v">
         <div class="date-wrap"><img src='logo.jpg' alt="Galilean Clinic logo"/></div>
         <div class="date-wrap"><span id="date"></span></div>

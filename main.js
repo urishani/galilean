@@ -1,15 +1,51 @@
+
+const DEBUG = false;
 let reader = new FileReader();
 let xlsxflag = true;
 let data;
 reader.onload = function (e) {
-    data = e.target.result;
+    reload(e.target.result);
+    refresh();
+};
+function readExcelFile() {
+    let regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
+    /*Checks whether the file is a valid excel file*/
+
+    let excelFile = $("#excelfile");
+    if (regex.test(excelFile.val().toLowerCase())) {
+        xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
+        if (excelFile.val().toLowerCase().indexOf(".xlsx") > 0) {
+            xlsxflag = true;
+        }
+        /*Checks whether the browser supports HTML5*/
+        if (!!FileReader) {
+            if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
+                reader.readAsArrayBuffer(excelFile[0].files[0]);
+            }
+            else {
+                reader.readAsBinaryString(excelFile[0].files[0]);
+            }
+        }
+        else {
+            alert("Sorry! Your browser does not support HTML5!");
+        }
+    }
+    else {
+        alert("Please upload a valid Excel file!");
+    }
+}
+
+let cycleTimePeriod = 7000;
+let cycleTimeLapse = 1500;
+let cycleInterval;
+function reload(d) {
     /*Converts the excel data in to object*/
     let workbook;
     if (xlsxflag) {
-        workbook = XLSX.read(data, {type: 'binary'});
+        workbook = XLSX.read(d, {type: 'binary'});
     }
     else {
-        workbook = XLS.read(data, {type: 'binary'});
+        workbook = XLS.read(d, {type: 'binary'});
     }
     /*Gets all the sheetnames of excel in to a letiable*/
     let sheet_name_list = workbook.SheetNames;
@@ -44,22 +80,21 @@ reader.onload = function (e) {
                 '" alt="' + p + '"/>\n';
             first = false;
         });
+        cycleTimePeriod = data.pictures[0].cycle || cycleTimePeriod;
+        cycleTimeLapse = data.pictures[1].cycle || cycleTimeLapse;
         div.html(inner);
         $('#cycler img:first').addClass('active');
-        setInterval('cycleImages()', data.pictures[0].cycle || 7000);
+        if (!!cycleInterval)
+            clearInterval(cycleInterval);
+        cycleInterval = setInterval('cycleImages()', cycleTimePeriod);
     }
-    let form = $('#form');
-    form.hide();
-    $(document).click(() => {
-        if (form.is(":hidden")) form.show();
-        else form.hide();
-    });
-    refresh();
 };
+let refreshTimeout;
 function refresh() {
     // alert('refresh');
     let days = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let todate = new Date();
+    if (DEBUG) console.log(todate, 'refresh');
     let today = todate.getDay(); // 1
     day = days[today];
     let hour = todate.getHours(); // 11
@@ -111,8 +146,10 @@ function refresh() {
         $('#display').hide();
         $('#noActivity').show();
     }
+    if (!!refreshTimeout)
+        clearTimeout(refreshTimeout);
     let seconds = new Date().getSeconds();
-    setTimeout(refresh, (60-seconds) * 1000);
+    refreshTimeout = setTimeout(checkAndRead, (60 - seconds) * 1000);
 }
 
 
@@ -120,36 +157,82 @@ function cycleImages() {
     let $active = $('#cycler .active');
     let $next = ($active.next().length > 0) ? $active.next() : $('#cycler img:first');
     $next.css('z-index',2);//move the next image up the pile
-    $active.fadeOut(1500,function(){//fade out the top image
+    $active.fadeOut(cycleTimeLapse,function(){//fade out the top image
         $active.css('z-index',1).show().removeClass('active');//reset the z-index and unhide the image
         $next.css('z-index',3).addClass('active');//make the next image the top one
     });
 }
-function readExcelFile() {
-    let regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
-    /*Checks whether the file is a valid excel file*/
 
-    let excelFile = $("#excelfile");
-    if (regex.test(excelFile.val().toLowerCase())) {
-        xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
-        if (excelFile.val().toLowerCase().indexOf(".xlsx") > 0) {
-            xlsxflag = true;
+let serverMode = true;
+let refButton, form;
+$(document).ready(()=> {
+    refButton = $('#refresh');
+    form = $('#form');
+    form.hide();
+    refButton.hide();
+    checkServer();
+    $(document).click(() => {
+        if (serverMode) {
+            if (refButton.css('display') === 'none')
+                refButton.show();
+            else
+                refButton.hide();
+        } else {
+            if (form.is(':hidden'))
+                form.show();
+            else
+                form.hide();
         }
-        /*Checks whether the browser supports HTML5*/
-        if (!!FileReader) {
-           if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
-                reader.readAsArrayBuffer(excelFile[0].files[0]);
-            }
-            else {
-                reader.readAsBinaryString(excelFile[0].files[0]);
-            }
-        }
-        else {
-            alert("Sorry! Your browser does not support HTML5!");
-        }
-    }
-    else {
-        alert("Please upload a valid Excel file!");
-    }
+    });
+});
+const checkServer = ()=> {
+    $.ajax('/', {
+        error: (e)=>
+            serverMode = false,
+        success: (d)=>
+            serverMode = true,
+        complete: (xhr, msg) => {
+            // alert ('serverMode: ' + serverMode);
+            if (serverMode)
+                checkAndRead();
+            else
+                form.show();
+        },
+    });
 }
-$(document).ready(()=> $('#form').show());
+
+let lastUpdate;
+const readData = () => {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/data', true);
+    xhr.responseType = 'arraybuffer';
+
+    xhr.onload = function (e) {
+        if (this.status === 200) {
+            reload(e.target.response);
+            if (DEBUG) console.log('new data from server');
+            lastUpdate = new Date();
+            refresh();
+        } else {
+            // serverMode = false;
+            // form.show();
+        }
+     };
+    xhr.send();
+};
+const checkAndRead = () => {
+    if (!serverMode) { refresh(); return;}
+    $.ajax('/date',
+        {
+            success: (d) => {
+                if (!lastUpdate || lastUpdate.getTime() < d.time) {
+                    readData();
+                } else refresh();
+            },
+            dataType: 'json',
+            complete: (xhr, msg) => {
+                // alert(msg);
+                if (msg !== 'success') refresh();
+            },
+        });
+}
