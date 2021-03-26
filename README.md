@@ -47,10 +47,12 @@ The picture files are located in the installation folder.
    2. *1*,*2*, ...*5* (more can be added) - each representing a room number.    
 To mark room usage, enter the doctor short id in the cell corresponding to
 that room (column) and the hour (row).
-   3. *pictures* - in this page list the pictures for the cycling picture effect on the banner. This page has two columns: 
-      * *picture* - which holds pictures file names, located in the installation folder. 
-      * *cycle* - which has only one entry to hold the number of 
-milliseconds for the pictures cycling time.
+3. **pictures** - in this page list the pictures for the cycling picture effect on the banner. This page has two columns: 
+   * *picture* - which holds pictures file names, located in the installation folder. 
+   * *cycle* - which has two entries. The first one 
+   holds the number of milliseconds for the pictures cycling time.
+   The second holds the number of milliseconds for the fade-in-out process to last.
+   Defaults are 7000 (7 seconds for each image to show), and 1500 (1.5 seconds for the fade-in-out process duration).
 
 # Server
 
@@ -84,7 +86,7 @@ file ***server.js***, locating the string 8080, and choosing
 a different 4 digit number (e.g., 3000).
 
 ## Killing the server
-To kill the server you can type ***<ctrl>C*** on the server console.
+To kill the server you can type ***CTRL-C*** on the server console.
 
 ## Configuration
 
