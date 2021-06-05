@@ -3,8 +3,26 @@ const DEBUG = false;
 let reader = new FileReader();
 let xlsxflag = true;
 let data;
+let serverMode = true;
+// let refButton, form;
+let room = number(room_number);
+let viewModel = {
+    room: ko.observable(room),
+    cycleImages: ko.observableArray(),
+    schedule: ko.observableArray(),
+    refresh: ko.observable(false),
+    date: ko.observable(makeDate(new Date())),
+    busy: ko.observable(true),
+    roomDetails: {
+        NAME: ko.observable(""),
+        FIELD: ko.observable(""),
+        PICTURE: ko.observable("/pictures/genericDoctor.jpg")
+    },
+}
+
 reader.onload = function (e) {
     reload(e.target.result);
+    ko.applyBindings(viewModel);
     refresh();
 };
 function readExcelFile() {
@@ -71,36 +89,46 @@ function reload(d) {
     if (data.pictures) {
         let pictures = data.pictures.map(e =>
             e.picture);
-        let div = $('#cycler');
-        let inner = '';
-        let first = true;
-        pictures.forEach(p => {
-            inner += '<img src="' + p +
-                '" class="' + (first ? 'first' : 'rest') +
-                '" alt="' + p + '"/>\n';
-            first = false;
-        });
+        // let div = $('#cycler');
+        // let inner = '';
+        // let first = true;
+        viewModel.cycleImages.slice(0);
+        pictures.forEach(p => viewModel.cycleImages.push("/images/" + p))
+            // inner += '<img src="/images/' + p +
+            //     '" class="' + (first ? 'first' : 'rest') +
+            //     '" alt="' + p + '"/>\n';
+            // first = false;
         cycleTimePeriod = data.pictures[0].cycle || cycleTimePeriod;
         cycleTimeLapse = data.pictures[1].cycle || cycleTimeLapse;
-        div.html(inner);
-        $('#cycler img:first').addClass('active');
+        // div.html(inner);
+        // $('#cycler img:first').addClass('active');
         if (!!cycleInterval)
             clearInterval(cycleInterval);
         cycleInterval = setInterval('cycleImages()', cycleTimePeriod);
     }
-};
+}
+
+function makeDate(date) {
+    return date.toDateString() + ', ' +
+        ('0'+hour).slice(-2) + ':00 - ' +
+        ('0'+(hour+1)).slice(-2) + ':00';
+}
+
 let refreshTimeout;
 function refresh() {
     // alert('refresh');
+    myViewModel.refresh(false);
+
     let days = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    let todate = new Date();
-    if (DEBUG) console.log(todate, 'refresh');
-    let today = todate.getDay(); // 1
+    let todayIs = new Date();
+    if (DEBUG) console.log(todayIs, 'refresh');
+    let today = todayIs.getDay(); // 1
     day = days[today];
-    let hour = todate.getHours(); // 11
-    $('#date').html(todate.toDateString() + ', ' +
-        ('0'+hour).slice(-2) + ':00 - ' +
-        ('0'+(hour+1)).slice(-2) + ':00');
+    let hour = todayIs.getHours(); // 11
+    viewModel.date(makeDate(todayIs));
+    // $('#date').html(todayIs.toDateString() + ', ' +
+    //     ('0'+hour).slice(-2) + ':00 - ' +
+    //     ('0'+(hour+1)).slice(-2) + ':00');
     let schedule = data[day];
     if (schedule) {
         schedule = schedule.filter(function (e) {
@@ -108,51 +136,97 @@ function refresh() {
         });
         if (schedule) schedule = schedule[0];
     }
-    let busy = false;
     let names = [];
     for (r = 1; r < 10; r++) {
         if (schedule && schedule[r] && schedule[r].trim()) {
-            names.push({
-               name: schedule[r],
-               room: r,
-            });
-        }
-    }
-    for (let i = 0; i<3; i++) {
-        let j = i+1;
-        let e = {name:'', field:'', picture:'', room:''};
-        let n = names[i];
-        if (!!n && !!n.name) {
-            let r = data.names.filter((e)=>e.id===n.name);
-            if (!!r && !!r[0]) {
-                e = {room: n.room, ...r[0]};
+            if (!room || room === r  ) {
+                let e = details(n, data);
+                names.push(e);
             }
-            busy = busy || true;
         }
-        let nameF = $('#name' + j);
-        nameF.text(e.name);
-        let fieldF = $('#field' + j);
-        fieldF.text(e.field);
-        if (!e.picture) e.picture = 'genericDoctor.jpg';
-        let picF = $('#picture' + j);
-        picF.attr('src', e.picture);
-        let roomF = $('#room' + j);
-        roomF.text((!!e.room)?('Room ' + e.room): '');
     }
-    if (busy) {
-        $('#display').show();
-        $('#noActivity').hide();
+    if (!!viewModel.room()) {
+        let details = names.filter(n=> n.room === viewModel.room());
+        details = !!(details.length) && details[0];
+        viewModel.busy(!!details);
+        viewModel.roomDetails.PICTURE(details.picture);
+        viewModel.roomDetails.FIELD(details.field);
+        viewModel.roomDetails.NAME(details.name);
     } else {
-        $('#display').hide();
-        $('#noActivity').show();
+        viewModel.schedule.removeAll();
+        names.forEach(n=> {
+            viewModel.schedule.push(n);
+        });
+        viewModel.busy(!!(names.length));
     }
+    // for (let i = 0; i<3; i++) {
+    //     let j = i+1;
+    //     let nameF = $('#name' + j);
+    //     let fieldF = $('#field' + j);
+    //     let picF = $('#picture' + j);
+    //     let roomF = $('#room' + j);
+    //     let row = $('.row' + j);
+    //     if (!!room) {
+    //         if (i > 0) break;
+    //         $('#room').show();
+    //         $('#main').hide();
+    //         nameF = $('#NAME');
+    //         fieldF = $('#FIELD');
+    //         picF = $('#PICTURE');
+    //         $('#roomHeader').show();
+    //         $('#roomNumber').text('' + room);
+    //         $('#roomColumn').hide();
+    //     } else {
+    //         $('#room').hide();
+    //         $('#main').show();
+    //         $('#roomHeader').hide();
+    //         $('#roomColumn').show();
+    //     }
+    //     let e = details(names[i], data);
+    //     if (!!e.name) {
+    //         busy = busy || true;
+    //         row.show();
+    //     } else {
+    //         row.hide();
+    //     }
+
+        // if (!!e.name) {
+        //     nameF.text(e.name);
+        //     fieldF.text(e.field);
+        //     if (!e.picture) e.picture =
+        //         'GenericDoctor' + {'':'', 'female': '-she', 'male': '-he'}[e.gender] + '.jpg';
+        //     picF.attr('src', 'images/' + e.picture);
+        //     roomF.text((!!e.room)?('Room ' + e.room): '');
+        // }
+    // if (busy) {
+    //     if (!!room) $('#cycler').hide();
+    //     $('.noActivity').hide();
+    //     $('#activeRoom').show();
+    // } else {
+    //     $('#cycler').show();
+    //     $('#main').hide();
+    //     $('#room').hide();
+    //     $('.noActivity').show();
+    // }
     if (!!refreshTimeout)
         clearTimeout(refreshTimeout);
     let seconds = new Date().getSeconds();
     refreshTimeout = setTimeout(checkAndRead, (60 - seconds) * 1000);
 }
 
-
+function details(n, data) {
+    let e = {name:'', field:'', picture:'', room:'', gender:''};
+    if (!!n && !!n.name) {
+        let r = data.names.filter((e)=>e.id===n.name);
+        if (!!r && !!r[0]) {
+            e = {room: n.room, ...r[0]};
+        }
+        if (!e.picture) e.picture =
+            'GenericDoctor' + {'':'', 'female': '-she', 'male': '-he'}[e.gender] + '.jpg';
+        e.picture = '/images/' + e.picture;
+    }
+    return e;
+}
 function cycleImages() {
     let $active = $('#cycler .active');
     let $next = ($active.next().length > 0) ? $active.next() : $('#cycler img:first');
@@ -163,26 +237,27 @@ function cycleImages() {
     });
 }
 
-let serverMode = true;
-let refButton, form;
 $(document).ready(()=> {
-    refButton = $('#refresh');
-    form = $('#form');
-    form.hide();
-    refButton.hide();
+
+    viewModel.refresh(false);
+    // refButton = $('#refresh');
+    // form = $('#form');
+    // form.hide();
+    // refButton.hide();
     checkServer();
     $(document).click(() => {
-        if (serverMode) {
-            if (refButton.css('display') === 'none')
-                refButton.show();
-            else
-                refButton.hide();
-        } else {
-            if (form.is(':hidden'))
-                form.show();
-            else
-                form.hide();
-        }
+        viewModel.refresh(true);
+        // if (serverMode) {
+        //     if (refButton.css('display') === 'none')
+        //         refButton.show();
+        //     else
+        //         refButton.hide();
+        // } else {
+        //     if (form.is(':hidden'))
+        //         form.show();
+        //     else
+        //         form.hide();
+        // }
     });
 });
 const checkServer = ()=> {
