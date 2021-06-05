@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "debug": "nodemon server.js"
+    "debug": "nodemon server.js --watch ./"
   },
   "dependencies": {
     "express": "^4.17.1"
