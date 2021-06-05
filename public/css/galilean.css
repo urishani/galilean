@@ -1,0 +1,88 @@
+/*table { margin-top: 20px; border-collapse: collapse; display: none; }*/
+/*table th, table td { border: 1px solid #000; padding: 5px 10px; }*/
+table td {border: solid black 1px}
+.cycler {position:relative; width: 240px; height: 400px;margin:10px;}
+#cycler img {position:absolute; z-index:1; width: 200px; height: 400px}
+#cycler img.first {position:absolute; z-index:1;}
+#cycler img.active {z-index:3}
+.date-wrap {background: lightblue;font-size:25px;
+    line-height:50px;
+    text-align: center;
+}
+#date {
+    vertical-align: middle;
+}
+.flex-container-v {
+    display: flex;
+    flex-direction: column;
+    background-color: DodgerBlue;
+    align-content: stretch;
+}
+.wrapper > * {
+    flex: 1 100%;
+    line-height:125px;
+    margin: 10px;
+    /*margin-bottom: 10px;*/
+}
+.wrapper > * > span {
+    margin-left: 20px;
+    font-size: 30px;
+}
+.wrapper {
+    justify-content: space-around;
+    align-items: center;
+}
+.arrow-img {position:absolute; z-index:1;
+    width: 150px; height: 75px; margin-top: 25px; margin-left: 10px;}
+.arrow-text {position:absolute; z-index:2;
+    font-weight: bold; color:darkgoldenrod;}
+.small-image {width:100px;height:125px;}
+.flex-container-h {
+    display: flex;
+    flex-direction: row;
+    background-color: DodgerBlue;
+    align-content: stretch;
+}
+.row1 {
+    background:palegoldenrod;
+}
+.row2 {
+    background:lightpink;
+}
+.row3 {
+    background:cornflowerblue;
+}
+.row {
+    position: absolute;
+    font-size: 30px;
+    color: white;
+    height:50%;
+    top: 50%;
+    margin-top: -25%;
+    text-align: center;
+}
+.banner {
+    font-size: 100px;
+    color: yellow;
+    text-align: center;
+    width: 100%
+}
+.s-banner {
+    font-size: 50px;
+    color: white;
+    text-align: center;
+}
+.dr-name { width:400px;
+    text-align: center;
+}
+.dr-field { width: 300px; text-align: center;}
+.dr-picture { width: 100px;}
+.dr-room { width: 180px}
+.noActivity {
+    background: lightgray;
+    font-size: 100px;
+    line-height: 375px;
+    width: 100%;
+    position: relative;
+    text-align: center;
+}
