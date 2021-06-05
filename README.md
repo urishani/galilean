@@ -16,21 +16,21 @@ or enter this URL in your web browser:
 ***NOTE:*** Just change the path to where the package has been unzipped.
 
 When the page opens up, a button appears on screen top
-to load the configuration file (e.g. ***galilean.xlsx*** - see explanation in 
+to load the configuration file (e.g. ***data/galilean.xlsx*** - see explanation in 
 [Configuration](#configuration) below).
 Click and select the configuration file you modified. The button disappears.
 
 Whenever the configuration is changed (see below), you can click anywhere on the 
-banner for this button to re-appear and then to upload a new configuration.
+screen for this button to re-appear and then to upload a new configuration.
 
-Clicking anywhere on the banner again will make this button disappear.
+Clicking anywhere on the screen again will make this button disappear.
 
 In general, the banner can run in full-page mode by clicking
 the ***F11*** button (or combine the ***Fn*** button with ***F11*** 
 in some computers).
 
 ## Configuration
-The banner is configured via an ***xlsx*** file. The ***galilean.xlsx*** should
+The banner is configured via an ***xlsx*** file. The ***data/galilean.xlsx*** should
 be used as the file template that you can change.
 
 The file has the following pages:
@@ -39,7 +39,7 @@ The file has the following pages:
    2. *name* - full name
    3. *field* - field of medical expertise
    4. *picture* - name of picture file. If missing, ***genericDoctor.jpg*** is used.
-The picture files are located in the installation folder.
+The picture files are located in ***public/images*** folder in the installation folder.
 2. **Monday** and additional pages for each work day of the week - Each page has a table 
     with these columns:
    1. *hour* - in which listed are the operational hours of the clinic. Presently these are
@@ -48,7 +48,7 @@ The picture files are located in the installation folder.
 To mark room usage, enter the doctor short id in the cell corresponding to
 that room (column) and the hour (row).
 3. **pictures** - in this page list the pictures for the cycling picture effect on the banner. This page has two columns: 
-   * *picture* - which holds pictures file names, located in the installation folder. 
+   * *picture* - which holds pictures file names, located in the ***public/images*** folder in the installation folder. 
    * *cycle* - which has two entries. The first one 
    holds the number of milliseconds for the pictures cycling time.
    The second holds the number of milliseconds for the fade-in-out process to last.
@@ -85,12 +85,23 @@ Note: The port 8080 used here can be changed by editing the
 file ***server.js***, locating the string 8080, and choosing 
 a different 4 digit number (e.g., 3000).
 
+## Alternative invocation options
+The ***main*** panel can be invoked via the URL above, but here are
+ additional URL options that can be used:
+ 
+ 1. ***<http://localhost:8080/main>*** starts the same main panel as
+ the above URL.
+ 2. ***<http://localhost:8080/room/1>*** starts a mini panel for 
+ room number 1, likewise the ***1*** can be replaced with any number
+ of a room in the clinic. This mini panel will show the doctor occupying that
+ room, and it can be used for the ipad positioned at the room door lintel.
+
 ## Killing the server
 To kill the server you can type ***CTRL-C*** on the server console.
 
 ## Configuration
 
-As in the non-server mode, the xlsx file ***galilean.xlsx***
+As in the non-server mode, the xlsx file ***data/galilean.xlsx***
 in the installation folder is used. However, when the file
 changes, all the clients displaying the banner page will update
 the new data at the next (per-minute) update period automatically.
