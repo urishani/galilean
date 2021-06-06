@@ -118,7 +118,7 @@ function refresh() {
     // alert('refresh');
     viewModel.refresh(false);
 
-    let days = ['Monday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let days = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let todayIs = new Date();
     if (DEBUG) console.log(todayIs, 'refresh');
     let today = todayIs.getDay(); // 1
