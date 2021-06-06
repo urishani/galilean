@@ -2,15 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1">
     <title></title>
-    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
-    <script src="/js/bower_components/knockout/dist/knockout.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="/css/galilean.css">
+    <script src="js/bower_components/knockout/dist/knockout.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="css/galilean.css">
     <script type="text/javascript">
         let room_number = "$room-number$";
     </script>
-    <script src="/js/main.js" type="text/javascript"></script>
+    <script src="js/main.js" type="text/javascript"></script>
 </head>
 <body>
     <form data-bind="visible: refresh" id="form">
@@ -55,7 +55,7 @@
                 <div class="flex-container-v wrapper" id="roomColumn" data-bind="foreach: schedule">
                     <div class="row1 dr-room" data-bind="click: $root.setRoom">
                         <span hidden data-bind="text: room"></span>
-                        <img class="arrow-img" src="/icons/arrow.svg">
+                        <img class="arrow-img" src="icons/arrow.svg">
                         <span id="room1" class="arrow-text"
                            data-bind="text: 'Room ' + room"></span>
                     </div>

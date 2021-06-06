@@ -17,7 +17,7 @@ let viewModel = new (function(){
     self.roomDetails= {
         NAME: ko.observable(""),
         FIELD: ko.observable(""),
-        PICTURE: ko.observable("/pictures/genericDoctor.jpg")
+        PICTURE: ko.observable("images/genericDoctor.jpg")
     };
     self.setRoom= function(slot, event) {
         let r = parseInt($(event.currentTarget.children[0]).text()) || 0;
@@ -92,7 +92,7 @@ function reload(d) {
         let pictures = data.pictures.map(e =>
             e.picture);
         viewModel.cycleImages.slice(0);
-        pictures.forEach(p => viewModel.cycleImages.push("/images/" + p));
+        pictures.forEach(p => viewModel.cycleImages.push("images/" + p));
         cycleTimePeriod = data.pictures[0].cycle || cycleTimePeriod;
         cycleTimeLapse = data.pictures[1].cycle || cycleTimeLapse;
         if (!!cycleInterval)
@@ -166,7 +166,7 @@ function details(n, data) {
         }
         if (!e.picture) e.picture =
             'GenericDoctor' + {'':'', 'female': '-she', 'male': '-he'}[e.gender] + '.jpg';
-        e.picture = '/images/' + e.picture;
+        e.picture = 'images/' + e.picture;
     }
     return e;
 }
@@ -193,35 +193,38 @@ function printView() {
     console.log("\tNAME:", viewModel.roomDetails.NAME());
     console.log("\tFIELD:", viewModel.roomDetails.FIELD());
 }
+function inLocalMode() {
+    $(document).click(() => {
+        if (viewModel.room() === 0)
+            viewModel.refresh(true);
+        else {
+            viewModel.room(0);
+            refresh();
+        }
+    });
+    serverMode = false;
+}
+
+function inServerMode() {
+    $(document).click(() => {
+        if (viewModel.room() > 0) {
+            viewModel.room(0);
+            refresh();
+        }
+    })
+    serverMode = true;
+}
+
 $(document).ready(()=> {
-    checkServer();
     viewModel.refresh(false);
     // printView();
     ko.applyBindings(viewModel);
-    if (!serverMode) {
-        $(document).click(() => {
-            if (viewModel.room() === 0)
-                viewModel.refresh(true);
-            else {
-                viewModel.room(0);
-                refresh();
-            }
-        });
-    } else {
-        $(document).click(() => {
-            if (viewModel.room() > 0) {
-                viewModel.room(0);
-                refresh();
-            }
-        })
-    }
+    checkServer(inServerMode, inLocalMode);
 });
-function checkServer() {
+function checkServer(serverHandler, localHandler) {
     $.ajax('/', {
-        error: (e)=>
-            serverMode = false,
-        success: (d)=>
-            serverMode = true,
+        error: (e)=> localHandler(),
+        success: (d)=> serverHandler(),
         complete: (xhr, msg) => {
             // alert ('serverMode: ' + serverMode);
             console.log("Working in " + (serverMode ? "server" : "local" ) + " mode.")
