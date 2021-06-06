@@ -87,11 +87,6 @@ function reload(d) {
         if (excelJson.length > 0) {
             data[y] = excelJson;
         }
-        // let display = document.getElementById(y);
-        // let display = $('#Monday')[0];
-        // display.innerText=JSON.stringify(exceljson);
-        // $(display).show();
-        // }
     });
     if (data.pictures) {
         let pictures = data.pictures.map(e =>
@@ -156,56 +151,6 @@ function refresh() {
         });
         viewModel.busy(!!(names.length));
     }
-    // printView();
-    // for (let i = 0; i<3; i++) {
-    //     let j = i+1;
-    //     let nameF = $('#name' + j);
-    //     let fieldF = $('#field' + j);
-    //     let picF = $('#picture' + j);
-    //     let roomF = $('#room' + j);
-    //     let row = $('.row' + j);
-    //     if (!!room) {
-    //         if (i > 0) break;
-    //         $('#room').show();
-    //         $('#main').hide();
-    //         nameF = $('#NAME');
-    //         fieldF = $('#FIELD');
-    //         picF = $('#PICTURE');
-    //         $('#roomHeader').show();
-    //         $('#roomNumber').text('' + room);
-    //         $('#roomColumn').hide();
-    //     } else {
-    //         $('#room').hide();
-    //         $('#main').show();
-    //         $('#roomHeader').hide();
-    //         $('#roomColumn').show();
-    //     }
-    //     let e = details(names[i], data);
-    //     if (!!e.name) {
-    //         busy = busy || true;
-    //         row.show();
-    //     } else {
-    //         row.hide();
-    //     }
-
-        // if (!!e.name) {
-        //     nameF.text(e.name);
-        //     fieldF.text(e.field);
-        //     if (!e.picture) e.picture =
-        //         'GenericDoctor' + {'':'', 'female': '-she', 'male': '-he'}[e.gender] + '.jpg';
-        //     picF.attr('src', 'images/' + e.picture);
-        //     roomF.text((!!e.room)?('Room ' + e.room): '');
-        // }
-    // if (busy) {
-    //     if (!!room) $('#cycler').hide();
-    //     $('.noActivity').hide();
-    //     $('#activeRoom').show();
-    // } else {
-    //     $('#cycler').show();
-    //     $('#main').hide();
-    //     $('#room').hide();
-    //     $('.noActivity').show();
-    // }
     if (!!refreshTimeout)
         clearTimeout(refreshTimeout);
     let seconds = new Date().getSeconds();
@@ -253,10 +198,6 @@ $(document).ready(()=> {
     viewModel.refresh(false);
     // printView();
     ko.applyBindings(viewModel);
-    // refButton = $('#refresh');
-    // form = $('#form');
-    // form.hide();
-    // refButton.hide();
     if (!serverMode) {
         $(document).click(() => {
             if (viewModel.room() === 0)
