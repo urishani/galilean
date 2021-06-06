@@ -8,10 +8,10 @@ Unzip the package obtained from the github repository at:
 
 ## Execution
 To execute, double click the ***galilean.html*** 
-file on your Windows (or MacOS) file browser, 
+file on your Windows (or MacOS) file explorer, 
 or enter this URL in your web browser:
 
-<file:///F:/workspace/EREZ/galilean/galilean.html>
+<file:///F:/workspace/EREZ/galilean/public/galilean.html>
 
 ***NOTE:*** Just change the path to where the package has been unzipped.
 
@@ -34,20 +34,26 @@ The banner is configured via an ***xlsx*** file. The ***data/galilean.xlsx*** sh
 be used as the file template that you can change.
 
 The file has the following pages:
+
 1. **names** - contains a table listing physician names in the clinic. Having these columns:
+   
    1. *id* - short name id
    2. *name* - full name
    3. *field* - field of medical expertise
    4. *picture* - name of picture file. If missing, ***genericDoctor.jpg*** is used.
+
 The picture files are located in ***public/images*** folder in the installation folder.
 2. **Monday** and additional pages for each work day of the week - Each page has a table 
     with these columns:
+   
    1. *hour* - in which listed are the operational hours of the clinic. Presently these are
         from 8 (AM) to 20 (PM).
    2. *1*,*2*, ...*5* (more can be added) - each representing a room number.    
+
 To mark room usage, enter the doctor short id in the cell corresponding to
 that room (column) and the hour (row).
 3. **pictures** - in this page list the pictures for the cycling picture effect on the banner. This page has two columns: 
+   
    * *picture* - which holds pictures file names, located in the ***public/images*** folder in the installation folder. 
    * *cycle* - which has two entries. The first one 
    holds the number of milliseconds for the pictures cycling time.
@@ -56,14 +62,16 @@ that room (column) and the hour (row).
 
 # Server
 
-The service can also work as a web server. The advantage is that the computer holding
-all the data runs a web server as explained here, 
-and it can (as well as any other computer, tablet or smart phone on the network)
-open the banner page from its built-in web-browser of choice.
+This is a more convenient option. Once the server is started, you 
+can access it via a simple URL from any computer of tablet on 
+your LAN (wired or wifi). Moreover, any URL starts automatically
+and its data is updated whenever the configuration changes, 
+also automatically. See "Alternative invocation Option" below.
 
 ## Installation
 
 The server requires an application known as ***node.js***.
+
 1. install ***node.js*** on your PC (or MAC) computer from this link:
 <https://nodejs.org/en/download/>
 This will create two tools: ***node***, which is the program which 
@@ -95,6 +103,11 @@ The ***main*** panel can be invoked via the URL above, but here are
  room number 1, likewise the ***1*** can be replaced with any number
  of a room in the clinic. This mini panel will show the doctor occupying that
  room, and it can be used for the ipad positioned at the room door lintel.
+ 
+ when in the main panel display, clicking on the room number of
+ any of the rooms shown there, will replace the panel with a room panel.
+ Once on a room panel, clicking anywhere will restore the main
+ panel view again.
 
 ## Killing the server
 To kill the server you can type ***CTRL-C*** on the server console.
