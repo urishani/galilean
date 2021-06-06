@@ -5,24 +5,31 @@ let xlsxflag = true;
 let data;
 let serverMode = true;
 // let refButton, form;
-let room = number(room_number);
-let viewModel = {
-    room: ko.observable(room),
-    cycleImages: ko.observableArray(),
-    schedule: ko.observableArray(),
-    refresh: ko.observable(false),
-    date: ko.observable(makeDate(new Date())),
-    busy: ko.observable(true),
-    roomDetails: {
+let room = parseInt(room_number);
+let viewModel = new (function(){
+    const self = this;
+    self.room= ko.observable(room || 0);
+    self.cycleImages= ko.observableArray([]);
+    self.schedule= ko.observableArray([]);
+    self.refresh= ko.observable(false);
+    self.date= ko.observable(makeDate(new Date()));
+    self.busy= ko.observable(true);
+    self.roomDetails= {
         NAME: ko.observable(""),
         FIELD: ko.observable(""),
         PICTURE: ko.observable("/pictures/genericDoctor.jpg")
-    },
-}
+    };
+    self.setRoom= function(slot, event) {
+        let r = parseInt($(event.currentTarget.children[0]).text()) || 0;
+        self.room(r);
+        refresh();
+        event.stopPropagation();
+
+    };
+})();
 
 reader.onload = function (e) {
     reload(e.target.result);
-    ko.applyBindings(viewModel);
     refresh();
 };
 function readExcelFile() {
@@ -89,19 +96,10 @@ function reload(d) {
     if (data.pictures) {
         let pictures = data.pictures.map(e =>
             e.picture);
-        // let div = $('#cycler');
-        // let inner = '';
-        // let first = true;
         viewModel.cycleImages.slice(0);
-        pictures.forEach(p => viewModel.cycleImages.push("/images/" + p))
-            // inner += '<img src="/images/' + p +
-            //     '" class="' + (first ? 'first' : 'rest') +
-            //     '" alt="' + p + '"/>\n';
-            // first = false;
+        pictures.forEach(p => viewModel.cycleImages.push("/images/" + p));
         cycleTimePeriod = data.pictures[0].cycle || cycleTimePeriod;
         cycleTimeLapse = data.pictures[1].cycle || cycleTimeLapse;
-        // div.html(inner);
-        // $('#cycler img:first').addClass('active');
         if (!!cycleInterval)
             clearInterval(cycleInterval);
         cycleInterval = setInterval('cycleImages()', cycleTimePeriod);
@@ -109,6 +107,7 @@ function reload(d) {
 }
 
 function makeDate(date) {
+    let hour = date.getHours(); // 11
     return date.toDateString() + ', ' +
         ('0'+hour).slice(-2) + ':00 - ' +
         ('0'+(hour+1)).slice(-2) + ':00';
@@ -117,19 +116,16 @@ function makeDate(date) {
 let refreshTimeout;
 function refresh() {
     // alert('refresh');
-    myViewModel.refresh(false);
+    viewModel.refresh(false);
 
-    let days = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let days = ['Monday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let todayIs = new Date();
     if (DEBUG) console.log(todayIs, 'refresh');
     let today = todayIs.getDay(); // 1
     day = days[today];
-    let hour = todayIs.getHours(); // 11
     viewModel.date(makeDate(todayIs));
-    // $('#date').html(todayIs.toDateString() + ', ' +
-    //     ('0'+hour).slice(-2) + ':00 - ' +
-    //     ('0'+(hour+1)).slice(-2) + ':00');
     let schedule = data[day];
+    let hour = todayIs.getHours();
     if (schedule) {
         schedule = schedule.filter(function (e) {
             return e.hour === hour.toString();
@@ -139,7 +135,8 @@ function refresh() {
     let names = [];
     for (r = 1; r < 10; r++) {
         if (schedule && schedule[r] && schedule[r].trim()) {
-            if (!room || room === r  ) {
+            if (!viewModel.room() || viewModel.room() === r  ) {
+                let n = {name: schedule[r].trim(), room: r};
                 let e = details(n, data);
                 names.push(e);
             }
@@ -159,6 +156,7 @@ function refresh() {
         });
         viewModel.busy(!!(names.length));
     }
+    // printView();
     // for (let i = 0; i<3; i++) {
     //     let j = i+1;
     //     let nameF = $('#name' + j);
@@ -237,30 +235,47 @@ function cycleImages() {
     });
 }
 
+function printView() {
+    console.log("---------");
+    console.log("busy:", viewModel.busy());
+    console.log("cycleImages:", viewModel.cycleImages());
+    console.log("schedule:", viewModel.schedule());
+    console.log("refresh:", viewModel.refresh());
+    console.log("date:", viewModel.date());
+    console.log("room:", viewModel.room());
+    console.log("roomDetails:");
+    console.log("\tPICTURE:", viewModel.roomDetails.PICTURE());
+    console.log("\tNAME:", viewModel.roomDetails.NAME());
+    console.log("\tFIELD:", viewModel.roomDetails.FIELD());
+}
 $(document).ready(()=> {
-
+    checkServer();
     viewModel.refresh(false);
+    // printView();
+    ko.applyBindings(viewModel);
     // refButton = $('#refresh');
     // form = $('#form');
     // form.hide();
     // refButton.hide();
-    checkServer();
-    $(document).click(() => {
-        viewModel.refresh(true);
-        // if (serverMode) {
-        //     if (refButton.css('display') === 'none')
-        //         refButton.show();
-        //     else
-        //         refButton.hide();
-        // } else {
-        //     if (form.is(':hidden'))
-        //         form.show();
-        //     else
-        //         form.hide();
-        // }
-    });
+    if (!serverMode) {
+        $(document).click(() => {
+            if (viewModel.room() === 0)
+                viewModel.refresh(true);
+            else {
+                viewModel.room(0);
+                refresh();
+            }
+        });
+    } else {
+        $(document).click(() => {
+            if (viewModel.room() > 0) {
+                viewModel.room(0);
+                refresh();
+            }
+        })
+    }
 });
-const checkServer = ()=> {
+function checkServer() {
     $.ajax('/', {
         error: (e)=>
             serverMode = false,
@@ -268,10 +283,11 @@ const checkServer = ()=> {
             serverMode = true,
         complete: (xhr, msg) => {
             // alert ('serverMode: ' + serverMode);
+            console.log("Working in " + (serverMode ? "server" : "local" ) + " mode.")
             if (serverMode)
                 checkAndRead();
             else
-                form.show();
+                viewModel.refresh(true);
         },
     });
 }
@@ -295,7 +311,7 @@ const readData = () => {
      };
     xhr.send();
 };
-const checkAndRead = () => {
+function checkAndRead() {
     if (!serverMode) { refresh(); return;}
     $.ajax('/date',
         {
